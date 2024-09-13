@@ -12,16 +12,38 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - if: always()
+      - id: debian-prefix-check
+        if: always()
         continue-on-error: true
         uses: reviews-team-test/ci-check-action@debian-prefix-check
-      - if: always()
+      - id: debian-version-check
+        if: always()
         continue-on-error: true
         uses: reviews-team-test/ci-check-action@debian-version-check
-      - if: always()
+      - id: debian-keys-check
+        if: always()
         continue-on-error: true
         uses: reviews-team-test/ci-check-action@debian-keys-check
-      - if: always() && hashFiles('comment.txt')
+      - id: summary-result
+        if: always()
+        continue-on-error: true
+        run: |
+          summary-status="是"
+          for status in ${preStatus} ${versionStatus} ${keysStatus}
+            if [ "$status" == "true" ]; then
+              summary-status="否"
+            fi
+          done
+          echo "summary-status=$summary-status" >> $GITHUB_OUTPUT
+          rm -rf comment.txt
+          echo ${{steps.debian-prefix-check.outputs.check_msg}} | tee -a comment.txt
+          echo ${{steps.debian-version-check.outputs.check_msg}} | tee -a comment.txt
+          echo ${{steps.debian-keys-check.outputs.check_msg}} | tee -a comment.txt
+        env:
+          preStatus: ${{ steps.debian-prefix-check.outputs.isFail }}
+          versionStatus: ${{ steps.debian-version-check.outputs.isFail }}
+          keysStatus: ${{ steps.debian-keys-check.outputs.isFail }}
+      - if: always() && steps.summary-result.outputs.summary-status == '否'
         continue-on-error: true
         uses: reviews-team-test/ci-check-action@post-check
         with:
@@ -32,7 +54,7 @@ jobs:
         uses: reviews-team-test/ci-check-action@send-data
         with:
           testtype: "debianCheck"
-          status: ${{ hashFiles('comment.txt') && '否' || '是' }}
-          result: ${{ hashFiles('comment.txt') && '1' || '0' }}
-      - if: always() && hashFiles('comment.txt')
+          status: ${{ steps.summary-result.outputs.summary-status }}
+          result: ${{ steps.summary-result.outputs.summary-status == '否' && '1' || '0' }}
+      - if: always() && steps.summary-result.outputs.summary-status == '否'
         run: exit 1
