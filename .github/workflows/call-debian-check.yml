@@ -9,4 +9,4 @@ concurrency:
 
 jobs:
   debian-check:
-    uses: ./.github/tools/debian-check.yml@master
+    uses: ./.github/workflows/debian-check.yml@master

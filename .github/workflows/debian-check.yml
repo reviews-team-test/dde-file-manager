@@ -1,7 +1,6 @@
 name: debianCheck
-on:
-  pull_request_target:
-    types: [opened, synchronize, reopened]
+on: 
+  workflow_call:
 
 permissions: write-all
 
