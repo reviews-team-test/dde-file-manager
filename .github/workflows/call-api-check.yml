@@ -9,4 +9,4 @@ concurrency:
 
 jobs:
   api-check:
-    uses: ./.github/workflows/api-check.yml@master
+    uses: ./.github/workflows/api-check.yml
