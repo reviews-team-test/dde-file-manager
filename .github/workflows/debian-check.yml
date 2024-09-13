@@ -31,21 +31,22 @@ jobs:
           for status in ${preStatus} ${versionStatus} ${keysStatus}
             if [ "$status" == "true" ]; then
               summary_status="否"
+              break
             fi
           done
           echo "summary-status=$summary_status" >> $GITHUB_OUTPUT
 
           if [ "$summary_status" == "否" ]; then
-            detailUrl = f'https://github.com/reviews-team-test/infra-settings/blob/master/services/prow/config/jobs/images/{debian-check}/readme.md'
-            echo "> [!WARNING]\n[[Debian检查]]({detailUrl})" | tee summary-comment.txt
+            detailUrl="https://github.com/reviews-team-test/infra-settings/blob/master/services/prow/config/jobs/images/debian-check/readme.md"
+            echo "> [\!WARNING]\n[[Debian检查]](${detailUrl})" | tee summary-comment.txt
           fi
           
           if [ "$preStatus" == "否" ]; then
-            echo "${{steps.debian-prefix-check.outputs.check_msg}}" | tee -a summary-comment.txt
+            echo "- ${{steps.debian-prefix-check.outputs.check_msg}}" | tee -a summary-comment.txt
           fi
 
           if [ "$versionStatus" == "否" ]; then
-            echo "${{steps.debian-version-check.outputs.check_msg}}" | tee -a summary-comment.txt
+            echo "- ${{steps.debian-version-check.outputs.check_msg}}" | tee -a summary-comment.txt
           fi
 
           if [ "$keysStatus" == "否" ]; then
