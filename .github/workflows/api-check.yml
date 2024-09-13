@@ -7,7 +7,8 @@ jobs:
   api-check:
     runs-on: ubuntu-latest
     steps:
-      - continue-on-error: true
+      - id: api-check
+        continue-on-error: true
         uses: reviews-team-test/ci-check-action@api-check
       - if: always() && hashFiles('comment.txt')
         continue-on-error: true
@@ -20,7 +21,7 @@ jobs:
         uses: reviews-team-test/ci-check-action@send-data
         with:
           testtype: "apiCheck"
-          status: ${{ hashFiles('comment.txt') && '否' || '是' }}
-          result: ${{ hashFiles('comment.txt') && '1' || '0' }}
-      - if: always() && hashFiles('comment.txt')
+          status: ${{ steps.api-check.outputs.isFail == 'true' && '否' || '是' }}
+          result: ${{ steps.api-check.outputs.isFail == 'true' && '1' || '0' }}
+      - if: always() && steps.api-check. outputs.isFail == 'true'
         run: exit 1

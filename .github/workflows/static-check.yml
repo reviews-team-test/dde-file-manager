@@ -32,9 +32,9 @@ jobs:
           goResult: ${{ steps.golangci-lint.outputs.isFailed != 'true' && '0' || steps.golangci-lint.outputs.errNum }}
           cppResult: ${{ steps.cppcheck.outputs.isFailed != 'true' && '0' || steps.cppcheck.outputs.errNum }}
           shellResult: ${{ steps.shellcheck.outputs.isFailed != 'true' && '0' || steps.shellcheck.outputs.errNum }}
-          goStatus: ${{ steps.golangci-lint.outputs.isFailed != 'true' && 'false' || 'true' }}
-          cppStatus: ${{ steps.cppcheck.outputs.isFailed != 'true' && 'false' || 'true' }}
-          shellStatus: ${{ steps.shellcheck.outputs.isFailed != 'true' && 'false' || 'true' }}
+          goStatus: ${{ steps.golangci-lint.outputs.isFailed }}
+          cppStatus: ${{ steps.cppcheck.outputs.isFailed }}
+          shellStatus: ${{ steps.shellcheck.outputs.isFailed }}
       - if: always()
         continue-on-error: true
         uses: reviews-team-test/ci-check-action@send-data
