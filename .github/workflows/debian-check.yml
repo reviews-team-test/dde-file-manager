@@ -2,7 +2,6 @@ name: debianCheck
 on: 
   workflow_call:
 
-permissions: write-all
 
 jobs:
   debian-check:
