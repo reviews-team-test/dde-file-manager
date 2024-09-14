@@ -38,7 +38,7 @@ jobs:
 
           if [ "$summary_status" == "否" ]; then
             detailUrl="https://github.com/reviews-team-test/infra-settings/blob/master/services/prow/config/jobs/images/debian-check/readme.md"
-            echo "> [\!WARNING]\n[[Debian检查]](${detailUrl})" | tee summary-comment.txt
+            echo -e "> [\!WARNING]\n[[Debian检查]](${detailUrl})" | tee summary-comment.txt
           fi
           
           if [ "$preStatus" == "否" ]; then
@@ -52,6 +52,7 @@ jobs:
           if [ "$keysStatus" == "否" ]; then
             cat comment.txt | tee -a summary-comment.txt
           fi
+          cat summary-comment.txt
         env:
           preStatus: ${{ steps.debian-prefix-check.outputs.isFail }}
           versionStatus: ${{ steps.debian-version-check.outputs.isFail }}
