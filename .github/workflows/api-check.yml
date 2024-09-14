@@ -23,5 +23,5 @@ jobs:
           testtype: "apiCheck"
           status: ${{ steps.api-check.outputs.isFail == 'true' && '否' || '是' }}
           result: ${{ steps.api-check.outputs.isFail == 'true' && '1' || '0' }}
-      - if: always() && steps.api-check. outputs.isFail == 'true'
+      - if: always() && steps.api-check.outputs.isFail == 'true'
         run: exit 1
