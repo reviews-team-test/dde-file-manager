@@ -41,15 +41,15 @@ jobs:
             echo -e "> [\!WARNING]\n[[Debian检查]](${detailUrl})" | tee summary-comment.txt
           fi
           
-          if [ "$preStatus" == "否" ]; then
+          if [ "$preStatus" == "true" ]; then
             echo "- ${{steps.debian-prefix-check.outputs.check_msg}}" | tee -a summary-comment.txt
           fi
 
-          if [ "$versionStatus" == "否" ]; then
+          if [ "$versionStatus" == "true" ]; then
             echo "- ${{steps.debian-version-check.outputs.check_msg}}" | tee -a summary-comment.txt
           fi
 
-          if [ "$keysStatus" == "否" ]; then
+          if [ "$keysStatus" == "true" ]; then
             cat comment.txt | tee -a summary-comment.txt
           fi
           cat summary-comment.txt
