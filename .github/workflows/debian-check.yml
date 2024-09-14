@@ -22,6 +22,6 @@ jobs:
         with:
           testtype: "debianCheck"
           status: ${{ steps.debian-check.outputs.summary-status }}
-          result: ${{ steps.debian-check.outputs.summary-status == '否' && '1' || '0' }}
+          result: ${{ steps.debian-check.outputs.summary-result }}
       - if: always() && steps.debian-check.outputs.summary-status == '否'
         run: exit 1
