@@ -28,7 +28,7 @@ jobs:
         continue-on-error: true
         run: |
           summary_status="是"
-          for status in ${preStatus} ${versionStatus} ${keysStatus}
+          for status in ${preStatus} ${versionStatus} ${keysStatus};do
             if [ "$status" == "true" ]; then
               summary_status="否"
               break
