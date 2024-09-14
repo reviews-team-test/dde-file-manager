@@ -7,57 +7,10 @@ jobs:
   debian-check:
     runs-on: ubuntu-latest
     steps:
-      - continue-on-error: true
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - id: debian-prefix-check
-        if: always()
+      - id: debian-check
         continue-on-error: true
-        uses: reviews-team-test/ci-check-action@debian-prefix-check
-      - id: debian-version-check
-        if: always()
-        continue-on-error: true
-        uses: reviews-team-test/ci-check-action@debian-version-check
-      - id: debian-keys-check
-        if: always()
-        continue-on-error: true
-        uses: reviews-team-test/ci-check-action@debian-keys-check
-      - id: summary-result
-        if: always()
-        continue-on-error: true
-        run: |
-          summary_status="是"
-          for status in ${preStatus} ${versionStatus} ${keysStatus};do
-            if [ "$status" == "true" ]; then
-              summary_status="否"
-              break
-            fi
-          done
-          echo "summary-status=$summary_status" >> $GITHUB_OUTPUT
-
-          if [ "$summary_status" == "否" ]; then
-            detailUrl="https://github.com/reviews-team-test/infra-settings/blob/master/services/prow/config/jobs/images/debian-check/readme.md"
-            echo -e "> [\!WARNING]\n[[Debian检查]](${detailUrl})" | tee summary-comment.txt
-          fi
-          
-          if [ "$preStatus" == "true" ]; then
-            echo "- ${{steps.debian-prefix-check.outputs.check_msg}}" | tee -a summary-comment.txt
-          fi
-
-          if [ "$versionStatus" == "true" ]; then
-            echo "- ${{steps.debian-version-check.outputs.check_msg}}" | tee -a summary-comment.txt
-          fi
-
-          if [ "$keysStatus" == "true" ]; then
-            cat comment.txt | tee -a summary-comment.txt
-          fi
-          cat summary-comment.txt
-        env:
-          preStatus: ${{ steps.debian-prefix-check.outputs.isFail }}
-          versionStatus: ${{ steps.debian-version-check.outputs.isFail }}
-          keysStatus: ${{ steps.debian-keys-check.outputs.isFail }}
-      - if: always() && steps.summary-result.outputs.summary-status == '否'
+        uses: reviews-team-test/ci-check-action@debian-check
+      - if: always() && steps.debian-check.outputs.summary-status == '否'
         continue-on-error: true
         uses: reviews-team-test/ci-check-action@post-check
         with:
@@ -68,7 +21,7 @@ jobs:
         uses: reviews-team-test/ci-check-action@send-data
         with:
           testtype: "debianCheck"
-          status: ${{ steps.summary-result.outputs.summary-status }}
-          result: ${{ steps.summary-result.outputs.summary-status == '否' && '1' || '0' }}
-      - if: always() && steps.summary-result.outputs.summary-status == '否'
+          status: ${{ steps.debian-check.outputs.summary-status }}
+          result: ${{ steps.debian-check.outputs.summary-status == '否' && '1' || '0' }}
+      - if: always() && steps.debian-check.outputs.summary-status == '否'
         run: exit 1
