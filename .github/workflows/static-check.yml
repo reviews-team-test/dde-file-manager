@@ -20,5 +20,3 @@ jobs:
       - if: always()
         continue-on-error: true
         uses: reviews-team-test/ci-check-action@dbusapi-check
-        with:
-          reviewers: ckux
