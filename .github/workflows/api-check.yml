@@ -15,7 +15,7 @@ jobs:
         uses: reviews-team-test/ci-check-action@post-check
         with:
           comment-file: comment.txt
-          reviewers: ckux
+          reviewers: liujianqiang-niu
       - if: always()
         continue-on-error: true
         uses: reviews-team-test/ci-check-action@send-data
