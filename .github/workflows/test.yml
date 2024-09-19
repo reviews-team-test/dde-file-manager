@@ -27,4 +27,4 @@ jobs:
           testtype: "staticCheck"
           status: ${{ contains(fromJSON(steps.check1.outputs.summary-status), 'true') && '否' || '是' }}
           status1: ${{ steps.check1.outputs.summary-status }}
-          status2: ${{ (fromJSON(steps.check1.outputs.summary-status)) }}
+          status2: ${{ fromJSON(steps.check1.outputs.summary-status) }}
