@@ -19,12 +19,8 @@ jobs:
             cppStatus: 'true'
             shellStatus: 'false'
       - if: always()
-        run: |
-          echo $status
-          echo $status1
-          echo $status2
-        env:
-          testtype: "staticCheck"
-          status: ${{ contains(fromJSON(steps.check1.outputs.summary-status), 'true') && '否' || '是' }}
-          status1: ${{ steps.check1.outputs.summary-status }}
-          status2: ${{ fromJSON(steps.check1.outputs.summary-status) }}
+        uses: reviews-team-test/ci-check-action@main
+        with:
+        #   status: ${{ contains(fromJSON(steps.check1.outputs.summary-status), 'true') && '否' || '是' }}
+        #   status1: ${{ steps.check1.outputs.summary-status }}
+          status: ${{ fromJSON(steps.check1.outputs.summary-status) }}
