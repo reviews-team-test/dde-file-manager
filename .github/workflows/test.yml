@@ -21,4 +21,4 @@ jobs:
       - if: always()
         uses: reviews-team-test/ci-check-action@main
         with:
-          status: ${{ contains(fromJSON('["push", "pull_request"]'), 'pull') }}
+          status: ${{ contains(fromJSON(steps.check1.outputs.summary-status), 'true') }}
