@@ -1,0 +1,30 @@
+name: test
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - id: check1
+        run: |
+            echo "summary-status=[${goStatus},${cppStatus},${shellStatus}]" >> $GITHUB_OUTPUT
+        env:
+            goStatus: 'false'
+            cppStatus: 'true'
+            shellStatus: 'false'
+      - if: always()
+        run: |
+          echo $status
+          echo $status1
+          echo $status2
+        env:
+          testtype: "staticCheck"
+          status: ${{ contains(fromJSON(steps.check1.outputs.summary-status), 'true') && '否' || '是' }}
+          status1: ${{ steps.check1.outputs.summary-status }}
+          status2: ${{ (fromJSON(steps.check1.outputs.summary-status)) }}
