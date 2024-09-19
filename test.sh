@@ -1,2 +1,2 @@
 
-echo $test3
+echo $test2
